@@ -16,6 +16,14 @@ export enum FunctionCategory {
   Audio = 'audio',
   Animation = 'animation',
   Theme = 'theme',
+  FileSystem = 'filesystem',
+  ScriptAnalysis = 'scriptanalysis',
+  ClassDB = 'classdb',
+  Shader = 'shader',
+  Geometry = 'geometry',
+  Localization = 'localization',
+  Editor = 'editor',
+  Utility = 'utility',
 }
 
 export interface RegistrySearchResult {

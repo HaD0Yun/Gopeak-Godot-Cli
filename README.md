@@ -8,11 +8,11 @@
 [![](https://img.shields.io/github/stars/HaD0Yun/godot-flow 'Stars')](https://github.com/HaD0Yun/godot-flow/stargazers)
 [![](https://img.shields.io/badge/License-MIT-red.svg 'MIT License')](https://opensource.org/licenses/MIT)
 
-**128 Godot functions through 4 MCP meta-tools. 342 tokens instead of 18,606.** ([measured](benchmark/evidence/benchmark-report.json))
+**220 Godot functions through 4 MCP meta-tools. 342 tokens instead of 18,606.** ([measured](benchmark/evidence/benchmark-report.json))
 
-`godot-flow` is a 3-layer architecture that lets AI assistants discover and execute Godot engine capabilities without loading massive tool schemas into context. Born from [GoPeak (godot-mcp)](https://github.com/HaD0Yun/godot-mcp), it compresses 128 individually-registered MCP tools into 4 meta-tools — a **54× token reduction** (measured via actual JSON-RPC `tools/list` responses). Adding functions costs zero extra tokens.
+`godot-flow` is a 3-layer architecture that lets AI assistants discover and execute Godot engine capabilities without loading massive tool schemas into context. Born from [GoPeak (godot-mcp)](https://github.com/HaD0Yun/godot-mcp), it compresses 220 individually-registered MCP tools into 4 meta-tools — a **54× token reduction** (measured via actual JSON-RPC `tools/list` responses). Adding functions costs zero extra tokens.
 
-> **Successor to GoPeak**: 128 functions (18 more than GoPeak's 110), same Godot integration depth, radically smaller context footprint.
+> **Successor to GoPeak**: 220 functions (110 more than GoPeak's 110), same Godot integration depth, radically smaller context footprint.
 
 ---
 
@@ -67,14 +67,14 @@ The AI discovers functions on-demand via `listfunc`/`findfunc`/`viewfunc`, then 
 │  │  → Zod validates input against schema      │  │
 │  │  → Routes by executionPath                 │  │
 │  └────────────────────────────────────────────┘  │
-│  Function Registry: 128 functions, 17 categories │
+│  Function Registry: 220 functions, 25 categories │
 └─────────────────┬───────────────────────────────┘
                   │
 ┌─────────────────▼───────────────────────────────┐
 │  Layer 3: Execution Engines                     │
 │  ┌──────────┐ ┌─────────┐ ┌─────┐ ┌─────┐      │
 │  │ Headless │ │ Runtime │ │ LSP │ │ DAP │      │
-│  │ (99 fn) │ │ (15 fn) │ │(4fn)│ │(10fn)│     │
+│  │(188 fn)│ │ (18 fn) │ │(4fn)│ │(10fn)│     │
 │  └──────────┘ └─────────┘ └─────┘ └─────┘      │
 │  → Godot CLI / TCP:7777 / LSP:6005 / DAP:6006  │
 └─────────────────────────────────────────────────┘
@@ -84,8 +84,8 @@ The AI discovers functions on-demand via `listfunc`/`findfunc`/`viewfunc`, then 
 
 | Engine | Port | Functions | How It Works |
 |--------|------|-----------|--------------|
-| **Headless** | — | 99 | Spawns `godot --headless --script` for each operation |
-| **Runtime** | TCP 7777 | 15 | Connects to running Godot game via runtime addon |
+| **Headless** | — | 188 | Spawns `godot --headless --script` for each operation |
+| **Runtime** | TCP 7777 | 18 | Connects to running Godot game via runtime addon |
 | **LSP** | 6005 | 4 | Communicates with Godot's built-in Language Server |
 | **DAP** | 6006 | 10 | Manages Debug Adapter Protocol sessions with background daemon |
 
@@ -285,7 +285,7 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 
 ---
 
-## Function Reference (128 functions, 17 categories)
+## Function Reference (220 functions, 25 categories)
 
 ### Core (3)
 
@@ -295,7 +295,7 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `run_project` | Launches a Godot project and captures output |
 | `stop_project` | Terminates the currently running Godot project |
 
-### Scene (15)
+### Scene (25)
 
 | Function | Description |
 |----------|-------------|
@@ -314,8 +314,18 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `list_connections` | Lists all signal connections in a scene |
 | `create_tileset` | Creates a TileSet from texture atlases |
 | `set_tilemap_cells` | Places tiles in a TileMap node |
+| `list_animations_in_library` | List all animations in an AnimationPlayer within a scene |
+| `get_animation_details` | Get detailed information for a specific animation |
+| `get_animation_track_details` | Get track information and keyframe counts for an animation |
+| `rename_animation` | Rename an animation within an AnimationPlayer |
+| `duplicate_animation` | Duplicate an existing animation with a new name |
+| `remove_animation` | Remove an animation from an AnimationPlayer |
+| `add_scene_group_tag` | Add a group tag to a node in a scene file |
+| `remove_scene_group_tag` | Remove a group tag from a node in a scene file |
+| `list_scene_group_tags` | List all group tags on a node in a scene file |
+| `batch_set_node_properties` | Set properties on multiple nodes in a single call |
 
-### Animation (6)
+### Animation (7)
 
 | Function | Description |
 |----------|-------------|
@@ -325,6 +335,7 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `add_animation_state` | Adds a state to an AnimationTree state machine |
 | `connect_animation_states` | Connects two states with a transition |
 | `set_animation_tree_parameter` | Sets a parameter on an AnimationTree node |
+| `play_animation` | Play an animation in an AnimationPlayer |
 ### Navigation (2)
 
 | Function | Description |
@@ -332,7 +343,7 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `create_navigation_agent` | Creates a NavigationAgent for AI pathfinding |
 | `create_navigation_region` | Creates a NavigationRegion for walkable areas |
 
-### Resource (22)
+### Resource (30)
 
 | Function | Description |
 |----------|-------------|
@@ -358,6 +369,14 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `update_project_uids` | Updates UID references in project (Godot 4.4+) |
 | `export_mesh_library` | Exports MeshInstance3D nodes as a MeshLibrary resource |
 | `resave_resources` | Resaves all scene/resource files to update UID references |
+| `list_resource_properties` | List typed properties from a saved resource file |
+| `batch_modify_resources` | Apply property changes to multiple resources in one call |
+| `detect_resource_type` | Detect and return the resource type of a file |
+| `clone_resource` | Deep-clone a resource to a new file path |
+| `list_resource_directory` | List resources in a directory with type and UID metadata |
+| `get_resource_metadata` | Read metadata from a resource file |
+| `validate_resource_integrity` | Validate a resource file's internal consistency |
+| `convert_resource_format` | Convert between text (.tres) and binary (.res) resource formats |
 ### Asset (3)
 
 | Function | Description |
@@ -366,7 +385,7 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `fetch_asset` | Download a CC0 asset to your project |
 | `list_asset_providers` | List available asset providers and capabilities |
 
-### Runtime (11)
+### Runtime (14)
 
 | Function | Description |
 |----------|-------------|
@@ -381,6 +400,9 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `inject_mouse_click` | Simulates mouse click at position |
 | `inject_mouse_motion` | Simulates mouse movement |
 | `inject_action` | Simulates Godot input action |
+| `wait_for_runtime_node` | Wait for a node to appear at a path in a running game |
+| `await_runtime_signal` | Wait for a signal emission in a running game |
+| `list_runtime_group_members` | List nodes in a group in a running game |
 
 ### LSP (4)
 
@@ -406,7 +428,7 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `dap_get_stack_trace` | Gets current stack trace |
 | `dap_get_output` | Gets captured DAP console output |
 
-### Project (21)
+### Project (29)
 
 | Function | Description |
 |----------|-------------|
@@ -431,6 +453,14 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 | `disable_plugin` | Disables a plugin |
 | `list_plugins` | Lists plugins with enabled/disabled status |
 | `scaffold_gameplay_prototype` | Creates a minimal playable prototype in one shot |
+| `batch_set_project_settings` | Set multiple project settings in one call |
+| `search_project_setting` | Search project settings by key pattern |
+| `get_project_statistics` | Compute project file statistics grouped by category |
+| `list_gdextension_entries` | List registered GDExtension entries |
+| `detect_project_features` | Detect enabled project features from settings |
+| `list_scene_dependencies` | List resource dependencies for a scene file |
+| `validate_export_presets` | Validate export presets configuration |
+| `list_resource_uids` | List all UID-to-path mappings in the project |
 
 ### Debug (4)
 
@@ -497,6 +527,104 @@ Skills teach the AI the **discover → inspect → execute** pattern:
 |----------|-------------|
 | `create_theme` | Creates a Theme resource for UI styling |
 | `apply_theme_to_node` | Applies a Theme resource to a Control node |
+
+### FileSystem (9)
+
+| Function | Description |
+|----------|-------------|
+| `list_project_tree` | List project files and directories recursively |
+| `find_files_by_pattern` | Search project files by glob-like pattern |
+| `read_text_file` | Read text file contents with optional line-range slicing |
+| `write_text_file` | Write full text content to a file path |
+| `ensure_directory` | Ensure a directory exists, creating missing parents |
+| `copy_path` | Copy a file or directory tree to a new location |
+| `move_path` | Move or rename a file/directory path |
+| `delete_path` | Delete a file or directory path |
+| `read_import_metadata` | Read and parse an asset's .import metadata file |
+
+### Script Analysis (9)
+
+| Function | Description |
+|----------|-------------|
+| `analyze_script_structure` | Analyze GDScript structure including methods, properties, signals |
+| `validate_script_syntax` | Validate a GDScript file for syntax/compile errors |
+| `get_script_inheritance_chain` | Resolve inheritance chain from script to native class |
+| `extract_script_dependencies` | Extract preload/load references from script source |
+| `list_script_methods` | List script methods with argument metadata |
+| `list_script_signals` | List custom signals defined by a script |
+| `list_script_exported_properties` | List exported script properties with type metadata |
+| `list_script_constants` | List constants declared in a GDScript file |
+| `create_script_from_template` | Generate a new script from predefined templates |
+
+### ClassDB (7)
+
+| Function | Description |
+|----------|-------------|
+| `list_class_methods` | List methods for an engine class with signature metadata |
+| `list_class_signals` | List signals for a class with argument metadata |
+| `list_class_enums` | Enumerate class enum definitions with integer values |
+| `list_class_constants` | List integer constants defined on a class |
+| `list_class_properties` | List class properties with type and hint metadata |
+| `check_class_compatibility` | Validate class existence and parent compatibility |
+| `instantiate_class_dynamic` | Instantiate a class dynamically via ClassDB |
+
+### Shader (2)
+
+| Function | Description |
+|----------|-------------|
+| `extract_shader_uniforms` | Parse a shader and return all declared uniforms |
+| `validate_shader_syntax` | Load and validate a shader resource |
+
+### Geometry (7)
+
+| Function | Description |
+|----------|-------------|
+| `create_array_mesh` | Create an ArrayMesh resource from surface arrays |
+| `append_surface_to_mesh` | Append a new surface to an existing ArrayMesh |
+| `analyze_mesh_structure` | Inspect a mesh and return per-surface statistics |
+| `create_trimesh_collision_shape` | Create a ConcavePolygonShape3D from mesh geometry |
+| `create_convex_collision_shape` | Create a ConvexPolygonShape3D from mesh geometry |
+| `create_curve2d` | Create and save a Curve2D resource from point data |
+| `create_curve3d` | Create and save a Curve3D resource from point data |
+
+### Localization (6)
+
+| Function | Description |
+|----------|-------------|
+| `list_translation_locales` | Scan translation resources and list available locales |
+| `get_translation_entry` | Read a translation message by key |
+| `set_translation_entry` | Set or update a translation message |
+| `remove_translation_entry` | Remove a translation message key |
+| `export_translations_csv` | Export translations into a CSV table |
+| `import_translations_csv` | Import translations from CSV into Translation resources |
+
+### Editor (15)
+
+| Function | Description |
+|----------|-------------|
+| `editor_scan_filesystem_changes` | Trigger EditorFileSystem rescan |
+| `editor_reimport_files` | Reimport asset files through the editor pipeline |
+| `editor_get_setting` | Read a single EditorSettings key |
+| `editor_set_setting` | Write a single EditorSettings key |
+| `editor_batch_get_settings` | Read multiple EditorSettings keys |
+| `editor_batch_set_settings` | Write multiple EditorSettings keys |
+| `editor_get_editor_paths` | Return editor config/data/cache paths |
+| `editor_open_scene` | Open a scene in editor context |
+| `editor_save_scene` | Save currently edited scene |
+| `editor_save_scene_as` | Save scene under a new target path |
+| `editor_close_scene` | Close scene tab in editor |
+| `editor_list_open_scenes` | List currently open scenes |
+| `editor_set_current_scene` | Switch current editor scene |
+| `editor_select_node` | Select a node in the current scene |
+| `editor_get_selected_nodes` | Get selected nodes from editor |
+
+### Utility (2)
+
+| Function | Description |
+|----------|-------------|
+| `get_system_info` | Return OS, CPU, and engine version information |
+| `execute_external_command` | Execute an allowlisted external command |
+
 ---
 
 ## Prompt Examples
@@ -551,7 +679,7 @@ and show the stack trace when hit."
 |---|---|---|
 | **Architecture** | 110 individual MCP tools | 4 meta-tools + function registry |
 | **Context cost** | ~18,600 tokens per session (measured) | ~342 tokens per session (measured) |
-| **Function count** | 110 | 128 |
+| **Function count** | 110 | 220 |
 | **Execution engines** | 4 (headless, runtime, LSP, DAP) | 4 (same engines, cleaner routing) |
 | **Input validation** | Per-tool Zod schemas | Dynamic Zod from registry schemas |
 | **Adding functions** | New `server.tool()` + schema | Add entry to registry data file |
@@ -630,7 +758,7 @@ npm run build
 
 ### 레지스트리 무결성 검증
 
-레지스트리에 등록된 128개 함수가 실제 GDScript(`godot_operations.gd`)와 일치하는지 확인하는 검증 스크립트가 포함되어 있습니다:
+레지스트리에 등록된 220개 함수가 실제 GDScript(`godot_operations.gd`)와 일치하는지 확인하는 검증 스크립트가 포함되어 있습니다:
 
 ```bash
 npx ts-node --esm scripts/validate-registry.ts
@@ -639,8 +767,8 @@ npx ts-node --esm scripts/validate-registry.ts
 이 스크립트는 다음을 검증합니다:
 
 - **함수 필드 완결성**: 모든 함수에 `name`, `description`, `category`, `executionPath`, `inputSchema`가 빠짐없이 있는지
-- **이름 유일성**: 110개 함수 이름에 중복이 없는지
-- **카테고리 유효성**: 모든 함수의 `category`가 정의된 17개 카테고리(core, scene, node, resource, asset, runtime, lsp, dap, project, debug, misc, rendering, physics, networking, audio, animation, theme) 중 하나인지
+- **이름 유일성**: 220개 함수 이름에 중복이 없는지
+- **카테고리 유효성**: 모든 함수의 `category`가 정의된 25개 카테고리(core, scene, node, resource, asset, runtime, lsp, dap, project, debug, misc, rendering, physics, networking, audio, animation, theme, filesystem, scriptanalysis, classdb, shader, geometry, localization, editor, utility) 중 하나인지
 - **실행 경로 유효성**: `executionPath`가 4개(headless, runtime, lsp, dap) 중 하나인지
 - **GDScript 교차 참조**: 레지스트리에 있는 headless 함수가 `godot_operations.gd`에도 존재하는지, 반대로 GDScript에만 있고 레지스트리에 없는 함수가 있는지 보고
 
@@ -752,7 +880,7 @@ godot-flow exec dap_continue
 | 프로덕션 코드의 `console.log` | 0건 |
 | 사용하지 않는 import | 0건 |
 | MCP `server.tool()` 호출 수 | 정확히 4개 |
-| 레지스트리 함수 수 | 정확히 128개 |
+| 레지스트리 함수 수 | 정확히 220개 |
 | SKILL.md 줄 수 | 각 100줄 미만 |
 
 이 기준들은 grep 한 줄로 바로 검증할 수 있습니다:
@@ -799,7 +927,7 @@ godot-flow/
 │   │   └── index.ts           # StdioServerTransport entry point
 │   ├── registry/
 │   │   ├── index.ts           # FunctionRegistry class (list, search, get)
-│   │   └── data/              # 17 category files with function definitions
+│   │   └── data/              # 25 category files with function definitions
 │   │       ├── core.ts
 │   │       ├── scene.ts
 │   │       ├── node.ts
@@ -816,6 +944,15 @@ godot-flow/
 │   │       ├── networking.ts
 │   │       ├── audio.ts
 │   │       ├── theme.ts
+│   │       ├── animation.ts
+│   │       ├── classdb.ts
+│   │       ├── filesystem.ts
+│   │       ├── scriptanalysis.ts
+│   │       ├── shader.ts
+│   │       ├── geometry.ts
+│   │       ├── localization.ts
+│   │       ├── editor.ts
+│   │       ├── utility.ts
 │   │       └── index.ts
 │   ├── engine/
 │   │   ├── headless.ts        # Godot --headless execution

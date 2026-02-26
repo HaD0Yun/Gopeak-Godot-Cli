@@ -760,5 +760,206 @@ export const resourceTools: FunctionDefinition[] = [
     },
     category: FunctionCategory.Resource,
     executionPath: "headless",
+  },
+  {
+    name: "duplicate_resource_file",
+    description: "Duplicate an existing resource file to a new path using Resource.duplicate() and ResourceSaver.save(), with optional deep duplication for nested subresources.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "sourcePath": {
+          "type": "string",
+          "description": "Source resource path to duplicate."
+        },
+        "targetPath": {
+          "type": "string",
+          "description": "Target resource path to save duplicated file."
+        },
+        "deep": {
+          "type": "boolean",
+          "description": "If true, performs deep duplicate to clone nested resources (default: true)."
+        }
+      },
+      "required": ["projectPath", "sourcePath", "targetPath"]
+    },
+    category: FunctionCategory.Resource,
+    executionPath: "headless",
+  },
+  {
+    name: "get_resource_dependency_tree",
+    description: "Build a recursive dependency tree for a resource using ResourceLoader.get_dependencies(), including transitive references up to a depth limit.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "resourcePath": {
+          "type": "string",
+          "description": "Root resource file to analyze."
+        },
+        "maxDepth": {
+          "type": "number",
+          "description": "Maximum recursive depth to traverse (-1 for unlimited)."
+        }
+      },
+      "required": ["projectPath", "resourcePath"]
+    },
+    category: FunctionCategory.Resource,
+    executionPath: "headless",
+  },
+  {
+    name: "batch_load_resources",
+    description: "Load multiple resources in one request and return per-file status, resolved type, and error information for bulk validation workflows.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "resourcePaths": {
+          "type": "array",
+          "description": "Array of resource paths to load.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["projectPath", "resourcePaths"]
+    },
+    category: FunctionCategory.Resource,
+    executionPath: "headless",
+  },
+  {
+    name: "batch_save_resources",
+    description: "Apply property updates to multiple existing resources and save each one, returning per-resource success/failure and property update counts.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "saveRequests": {
+          "type": "array",
+          "description": "Array of save requests with resource path and property overrides.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Resource path to load and save."
+              },
+              "properties": {
+                "type": "object",
+                "description": "Property dictionary to apply before saving."
+              }
+            },
+            "required": ["path", "properties"]
+          }
+        }
+      },
+      "required": ["projectPath", "saveRequests"]
+    },
+    category: FunctionCategory.Resource,
+    executionPath: "headless",
+  },
+  {
+    name: "convert_resource_file",
+    description: "Load a resource and save it to a new target path/extension to convert between Godot resource file representations where supported.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "sourcePath": {
+          "type": "string",
+          "description": "Source resource file path to read."
+        },
+        "targetPath": {
+          "type": "string",
+          "description": "Target resource file path to write."
+        }
+      },
+      "required": ["projectPath", "sourcePath", "targetPath"]
+    },
+    category: FunctionCategory.Resource,
+    executionPath: "headless",
+  },
+  {
+    name: "list_resource_subresources",
+    description: "Inspect a resource's stored properties and list embedded subresources found directly or inside arrays, including class/path metadata.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "resourcePath": {
+          "type": "string",
+          "description": "Resource path to inspect for embedded Resource values."
+        }
+      },
+      "required": ["projectPath", "resourcePath"]
+    },
+    category: FunctionCategory.Resource,
+    executionPath: "headless",
+  },
+  {
+    name: "get_resource_property_schema",
+    description: "Return property metadata schema for a resource using get_property_list(), including property type IDs, hints, usage flags, and class_name constraints.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "resourcePath": {
+          "type": "string",
+          "description": "Resource file path to introspect."
+        }
+      },
+      "required": ["projectPath", "resourcePath"]
+    },
+    category: FunctionCategory.Resource,
+    executionPath: "headless",
+  },
+  {
+    name: "diff_resource_files",
+    description: "Compare two resource files property-by-property and return differences, optionally skipping fields where both values match default instance values.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "leftPath": {
+          "type": "string",
+          "description": "Left/base resource file path for comparison."
+        },
+        "rightPath": {
+          "type": "string",
+          "description": "Right/target resource file path for comparison."
+        },
+        "ignoreDefaults": {
+          "type": "boolean",
+          "description": "If true, ignores properties that are default-valued in both resources (default: false)."
+        }
+      },
+      "required": ["projectPath", "leftPath", "rightPath"]
+    },
+    category: FunctionCategory.Resource,
+    executionPath: "headless",
   }
 ];

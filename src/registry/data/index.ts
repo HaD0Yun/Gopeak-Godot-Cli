@@ -16,6 +16,15 @@ export { physicsTools } from './physics.js';
 export { networkingTools } from './networking.js';
 export { audioTools } from './audio.js';
 export { themeTools } from './theme.js';
+export { animationTools } from './animation.js';
+export { filesystemTools } from './filesystem.js';
+export { scriptanalysisTools } from './scriptanalysis.js';
+export { classdbTools } from './classdb.js';
+export { shaderTools } from './shader.js';
+export { geometryTools } from './geometry.js';
+export { localizationTools } from './localization.js';
+export { editorTools } from './editor.js';
+export { utilityTools } from './utility.js';
 
 import { coreTools } from './core.js';
 import { sceneTools } from './scene.js';
@@ -33,6 +42,15 @@ import { physicsTools } from './physics.js';
 import { networkingTools } from './networking.js';
 import { audioTools } from './audio.js';
 import { themeTools } from './theme.js';
+import { animationTools } from './animation.js';
+import { filesystemTools } from './filesystem.js';
+import { scriptanalysisTools } from './scriptanalysis.js';
+import { classdbTools } from './classdb.js';
+import { shaderTools } from './shader.js';
+import { geometryTools } from './geometry.js';
+import { localizationTools } from './localization.js';
+import { editorTools } from './editor.js';
+import { utilityTools } from './utility.js';
 
 export const allTools: FunctionDefinition[] = [
   ...coreTools,
@@ -51,4 +69,13 @@ export const allTools: FunctionDefinition[] = [
   ...networkingTools,
   ...audioTools,
   ...themeTools,
+  ...animationTools,
+  ...filesystemTools,
+  ...scriptanalysisTools,
+  ...classdbTools,
+  ...shaderTools,
+  ...geometryTools,
+  ...localizationTools,
+  ...editorTools,
+  ...utilityTools,
 ];

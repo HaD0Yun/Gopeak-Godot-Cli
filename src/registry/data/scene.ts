@@ -782,5 +782,329 @@ export const sceneTools: FunctionDefinition[] = [
     },
     category: FunctionCategory.Animation,
     executionPath: "headless",
+  },
+  {
+    name: "list_animations_in_library",
+    description: "List animations in an AnimationPlayer AnimationLibrary and return basic timing metadata.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": { "type": "string", "description": "Absolute path to project directory containing project.godot." },
+        "scenePath": { "type": "string", "description": "Path to scene file relative to project." },
+        "animationPlayerPath": { "type": "string", "description": "Path to AnimationPlayer node (default: '.')." },
+        "libraryKey": { "type": "string", "description": "Animation library key (default: '')." }
+      },
+      "required": ["projectPath", "scenePath"]
+    },
+    category: FunctionCategory.Animation,
+    executionPath: "headless",
+  },
+  {
+    name: "get_animation_details",
+    description: "Get animation metadata including length, loop mode, step size, and track summary.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": { "type": "string", "description": "Absolute path to project directory containing project.godot." },
+        "scenePath": { "type": "string", "description": "Path to scene file relative to project." },
+        "animationPlayerPath": { "type": "string", "description": "Path to AnimationPlayer node." },
+        "libraryKey": { "type": "string", "description": "Animation library key." },
+        "animationName": { "type": "string", "description": "Name of the animation to inspect." }
+      },
+      "required": ["projectPath", "scenePath", "animationPlayerPath", "libraryKey", "animationName"]
+    },
+    category: FunctionCategory.Animation,
+    executionPath: "headless",
+  },
+  {
+    name: "get_animation_track_details",
+    description: "Get detailed keyframe data for a single animation track by index.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": { "type": "string", "description": "Absolute path to project directory containing project.godot." },
+        "scenePath": { "type": "string", "description": "Path to scene file relative to project." },
+        "animationPlayerPath": { "type": "string", "description": "Path to AnimationPlayer node." },
+        "libraryKey": { "type": "string", "description": "Animation library key." },
+        "animationName": { "type": "string", "description": "Name of the animation to inspect." },
+        "trackIndex": { "type": "number", "description": "Track index in the animation." }
+      },
+      "required": ["projectPath", "scenePath", "animationPlayerPath", "libraryKey", "animationName", "trackIndex"]
+    },
+    category: FunctionCategory.Animation,
+    executionPath: "headless",
+  },
+  {
+    name: "rename_animation",
+    description: "Rename an animation in an AnimationLibrary and save the scene.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": { "type": "string", "description": "Absolute path to project directory containing project.godot." },
+        "scenePath": { "type": "string", "description": "Path to scene file relative to project." },
+        "animationPlayerPath": { "type": "string", "description": "Path to AnimationPlayer node." },
+        "libraryKey": { "type": "string", "description": "Animation library key." },
+        "oldName": { "type": "string", "description": "Existing animation name." },
+        "newName": { "type": "string", "description": "New animation name." }
+      },
+      "required": ["projectPath", "scenePath", "animationPlayerPath", "libraryKey", "oldName", "newName"]
+    },
+    category: FunctionCategory.Animation,
+    executionPath: "headless",
+  },
+  {
+    name: "duplicate_animation",
+    description: "Duplicate an animation in an AnimationLibrary to a new target name and save the scene.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": { "type": "string", "description": "Absolute path to project directory containing project.godot." },
+        "scenePath": { "type": "string", "description": "Path to scene file relative to project." },
+        "animationPlayerPath": { "type": "string", "description": "Path to AnimationPlayer node." },
+        "libraryKey": { "type": "string", "description": "Animation library key." },
+        "sourceName": { "type": "string", "description": "Source animation name." },
+        "targetName": { "type": "string", "description": "Name of duplicated animation." }
+      },
+      "required": ["projectPath", "scenePath", "animationPlayerPath", "libraryKey", "sourceName", "targetName"]
+    },
+    category: FunctionCategory.Animation,
+    executionPath: "headless",
+  },
+  {
+    name: "remove_animation",
+    description: "Remove an animation from an AnimationLibrary and save the scene.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": { "type": "string", "description": "Absolute path to project directory containing project.godot." },
+        "scenePath": { "type": "string", "description": "Path to scene file relative to project." },
+        "animationPlayerPath": { "type": "string", "description": "Path to AnimationPlayer node." },
+        "libraryKey": { "type": "string", "description": "Animation library key." },
+        "animationName": { "type": "string", "description": "Animation name to remove." }
+      },
+      "required": ["projectPath", "scenePath", "animationPlayerPath", "libraryKey", "animationName"]
+    },
+    category: FunctionCategory.Animation,
+    executionPath: "headless",
+  },
+  {
+    name: "analyze_scene_state",
+    description: "Analyze a packed scene through SceneState without instantiating it, returning node hierarchy metadata, node paths/types, and per-node property counts.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to a scene file (.tscn/.scn), relative to project or res:// path."
+        }
+      },
+      "required": ["projectPath", "scenePath"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "list_scene_state_connections",
+    description: "Read signal connections directly from PackedScene SceneState without instantiating the scene. Returns source/target node paths, signal names, methods, and connection flags.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to scene file to inspect."
+        }
+      },
+      "required": ["projectPath", "scenePath"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "list_scene_dependencies",
+    description: "List external resource dependencies referenced by a scene. Can optionally recurse through transitive dependencies for dependency graph exploration.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to the source scene file."
+        },
+        "recursive": {
+          "type": "boolean",
+          "description": "If true, recursively traverses dependencies of dependencies (default: false)."
+        }
+      },
+      "required": ["projectPath", "scenePath"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "find_scene_nodes_by_type",
+    description: "Instantiate a scene and return nodes that match a class name. Supports exact type matching or include-derived checks using Node.is_class().",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to scene file to instantiate and inspect."
+        },
+        "className": {
+          "type": "string",
+          "description": "Engine or script class name to match (e.g., 'Node3D', 'Sprite2D', 'Control')."
+        },
+        "includeDerived": {
+          "type": "boolean",
+          "description": "If true, include subclasses/derived classes via is_class() (default: false exact class match)."
+        }
+      },
+      "required": ["projectPath", "scenePath", "className"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "find_scene_nodes_by_group",
+    description: "Find nodes in a scene that belong to a specified group using SceneState group membership data, without scene instantiation.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to scene file to inspect."
+        },
+        "groupName": {
+          "type": "string",
+          "description": "Group name to search for (e.g., 'enemies', 'ui', 'saveable')."
+        }
+      },
+      "required": ["projectPath", "scenePath", "groupName"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "get_scene_inheritance_chain",
+    description: "Return the inheritance chain for an inherited scene, starting from the given scene and walking inherited base scenes up to the root base scene.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to the child/inherited scene file."
+        }
+      },
+      "required": ["projectPath", "scenePath"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "list_scene_groups",
+    description: "List all groups declared in a scene and return counts of how many nodes belong to each group using SceneState data.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to scene file to analyze."
+        }
+      },
+      "required": ["projectPath", "scenePath"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "get_scene_owner_paths",
+    description: "Instantiate a scene and return owner relationships for each node, useful for understanding scene ownership and save boundaries.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to scene file to instantiate and inspect."
+        }
+      },
+      "required": ["projectPath", "scenePath"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "list_scene_unique_name_nodes",
+    description: "Instantiate a scene and list nodes marked unique_name_in_owner, including their names, scene paths, and runtime classes.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to scene file to inspect."
+        }
+      },
+      "required": ["projectPath", "scenePath"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
+  },
+  {
+    name: "find_scene_nodes_by_script",
+    description: "Find nodes in a scene whose serialized SceneState 'script' property matches a target script path, without instantiating the scene.",
+    inputSchema: {
+      "type": "object",
+      "properties": {
+        "projectPath": {
+          "type": "string",
+          "description": "Absolute path to project directory containing project.godot."
+        },
+        "scenePath": {
+          "type": "string",
+          "description": "Path to scene file to inspect."
+        },
+        "scriptPath": {
+          "type": "string",
+          "description": "Script path to match (relative path, absolute path inside project, or res:// path)."
+        }
+      },
+      "required": ["projectPath", "scenePath", "scriptPath"]
+    },
+    category: FunctionCategory.Scene,
+    executionPath: "headless",
   }
 ];

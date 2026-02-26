@@ -508,6 +508,237 @@ export const projectTools: FunctionDefinition[] = [
     executionPath: "headless",
   },
   {
+    name: "get_input_action_events",
+    description: "Read a specific InputMap action configuration from project settings and return deadzone plus normalized event metadata for tooling and migration workflows.",
+    inputSchema: {
+        "type": "object",
+        "properties": {
+            "projectPath": {
+                "type": "string",
+                "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+            },
+            "actionName": {
+                "type": "string",
+                "description": "Input action name to inspect (e.g., \"jump\", \"attack\")."
+            }
+        },
+        "required": [
+            "projectPath",
+            "actionName"
+        ]
+    },
+    category: FunctionCategory.Project,
+    executionPath: "headless",
+  },
+  {
+    name: "set_input_action_events",
+    description: "Replace an input action's event bindings and deadzone in one call. Supports key, mouse button, joypad button, and joypad axis event definitions.",
+    inputSchema: {
+        "type": "object",
+        "properties": {
+            "projectPath": {
+                "type": "string",
+                "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+            },
+            "actionName": {
+                "type": "string",
+                "description": "Input action name to create/update."
+            },
+            "events": {
+                "type": "array",
+                "description": "Event definitions to assign to the action.",
+                "items": {
+                    "type": "object"
+                }
+            },
+            "deadzone": {
+                "type": "number",
+                "description": "Analog deadzone value (0-1). Default: 0.5"
+            }
+        },
+        "required": [
+            "projectPath",
+            "actionName",
+            "events"
+        ]
+    },
+    category: FunctionCategory.Project,
+    executionPath: "headless",
+  },
+  {
+    name: "rename_input_action",
+    description: "Rename an existing input action while preserving all bound events and deadzone settings. Fails when source does not exist or destination already exists.",
+    inputSchema: {
+        "type": "object",
+        "properties": {
+            "projectPath": {
+                "type": "string",
+                "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+            },
+            "oldName": {
+                "type": "string",
+                "description": "Current input action name."
+            },
+            "newName": {
+                "type": "string",
+                "description": "New input action name."
+            }
+        },
+        "required": [
+            "projectPath",
+            "oldName",
+            "newName"
+        ]
+    },
+    category: FunctionCategory.Project,
+    executionPath: "headless",
+  },
+  {
+    name: "list_project_layer_names",
+    description: "List configured layer names for a domain (physics_2d, physics_3d, render, navigation) with index and backing project setting key.",
+    inputSchema: {
+        "type": "object",
+        "properties": {
+            "projectPath": {
+                "type": "string",
+                "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+            },
+            "layerDomain": {
+                "type": "string",
+                "enum": [
+                    "physics_2d",
+                    "physics_3d",
+                    "render",
+                    "navigation"
+                ],
+                "description": "Layer domain to read names from."
+            }
+        },
+        "required": [
+            "projectPath",
+            "layerDomain"
+        ]
+    },
+    category: FunctionCategory.Project,
+    executionPath: "headless",
+  },
+  {
+    name: "set_project_layer_name",
+    description: "Set a single named layer entry for a selected domain and index. Persists directly to project settings.",
+    inputSchema: {
+        "type": "object",
+        "properties": {
+            "projectPath": {
+                "type": "string",
+                "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+            },
+            "layerDomain": {
+                "type": "string",
+                "enum": [
+                    "physics_2d",
+                    "physics_3d",
+                    "render",
+                    "navigation"
+                ],
+                "description": "Layer domain to modify."
+            },
+            "layerIndex": {
+                "type": "number",
+                "description": "Layer index (1-32)."
+            },
+            "layerName": {
+                "type": "string",
+                "description": "Display name for the selected layer index."
+            }
+        },
+        "required": [
+            "projectPath",
+            "layerDomain",
+            "layerIndex",
+            "layerName"
+        ]
+    },
+    category: FunctionCategory.Project,
+    executionPath: "headless",
+  },
+  {
+    name: "batch_get_project_settings",
+    description: "Read multiple project settings in one request and return a key/value dictionary. Useful for diffing configuration snapshots.",
+    inputSchema: {
+        "type": "object",
+        "properties": {
+            "projectPath": {
+                "type": "string",
+                "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+            },
+            "settingKeys": {
+                "type": "array",
+                "description": "Array of ProjectSettings keys to fetch.",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "required": [
+            "projectPath",
+            "settingKeys"
+        ]
+    },
+    category: FunctionCategory.Project,
+    executionPath: "headless",
+  },
+  {
+    name: "batch_set_project_settings",
+    description: "Write multiple project settings in one operation and save once. Best for transactional configuration updates.",
+    inputSchema: {
+        "type": "object",
+        "properties": {
+            "projectPath": {
+                "type": "string",
+                "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+            },
+            "settingsMap": {
+                "type": "object",
+                "description": "Dictionary mapping setting path -> value to apply before save."
+            }
+        },
+        "required": [
+            "projectPath",
+            "settingsMap"
+        ]
+    },
+    category: FunctionCategory.Project,
+    executionPath: "headless",
+  },
+  {
+    name: "update_export_preset_options",
+    description: "Update export preset option values by preset name or numeric index in export_presets.cfg. Saves modified preset settings back to disk.",
+    inputSchema: {
+        "type": "object",
+        "properties": {
+            "projectPath": {
+                "type": "string",
+                "description": "Absolute path to project directory containing project.godot. Use the same path across all tool calls in a workflow."
+            },
+            "presetNameOrIndex": {
+                "type": "string",
+                "description": "Preset identifier by display name or index string (e.g., \"Windows Desktop\" or \"0\")."
+            },
+            "options": {
+                "type": "object",
+                "description": "Dictionary of option keys and values to update for the target preset."
+            }
+        },
+        "required": [
+            "projectPath",
+            "presetNameOrIndex",
+            "options"
+        ]
+    },
+    category: FunctionCategory.Project,
+    executionPath: "headless",
+  },
+  {
     name: "set_main_scene",
     description: "Sets which scene loads first when the game starts. Updates application/run/main_scene in project.godot.",
     inputSchema: {

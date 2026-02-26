@@ -319,5 +319,50 @@ export const runtimeTools: FunctionDefinition[] = [
     },
     category: FunctionCategory.Runtime,
     executionPath: "runtime",
-  }
+  },
+  {
+    name: "wait_for_runtime_node",
+    description: "Wait for a node to appear at a path in a running game instance.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        projectPath: { type: "string", description: "Path to the Godot project directory" },
+        nodePath: { type: "string", description: "NodePath to wait for" },
+        timeoutMs: { type: "number", description: "Timeout in milliseconds (default: 5000)" },
+      },
+      required: ["projectPath", "nodePath"],
+    },
+    category: FunctionCategory.Runtime,
+    executionPath: "runtime",
+  },
+  {
+    name: "await_runtime_signal",
+    description: "Wait for a signal emission in a running game instance.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        projectPath: { type: "string", description: "Path to the Godot project directory" },
+        nodePath: { type: "string", description: "NodePath to connect to" },
+        signalName: { type: "string", description: "Signal name to await" },
+        timeoutMs: { type: "number", description: "Timeout in milliseconds (default: 5000)" },
+      },
+      required: ["projectPath", "nodePath", "signalName"],
+    },
+    category: FunctionCategory.Runtime,
+    executionPath: "runtime",
+  },
+  {
+    name: "list_runtime_group_members",
+    description: "List nodes currently in a group in a running game instance.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        projectPath: { type: "string", description: "Path to the Godot project directory" },
+        groupName: { type: "string", description: "Group name to inspect" },
+      },
+      required: ["projectPath", "groupName"],
+    },
+    category: FunctionCategory.Runtime,
+    executionPath: "runtime",
+  },
 ];
