@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { GodotFlowError } from '../errors.js';
 import type { DAPConfig } from '../types/engine.js';
+import { runRequestLoop } from './request-loop.js';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -692,51 +693,26 @@ async function writeJsonLine(socket: Socket, payload: JsonRecord): Promise<void>
 }
 
 async function handleClientMessage(processState: DAPDaemonProcess, socket: Socket, rawLine: string): Promise<void> {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(rawLine);
-  } catch (error) {
-    await writeJsonLine(socket, {
-      success: false,
-      error: {
-        code: 'INVALID_ARGS',
-        message: `Invalid JSON request: ${toErrorMessage(error)}`,
-      },
-    });
-    return;
-  }
+  let shouldShutdown = false;
+  const response = await runRequestLoop(rawLine, async (request) => {
+    const action = typeof request.action === 'string' ? request.action : 'execute';
 
-  if (!isRecord(parsed)) {
-    await writeJsonLine(socket, {
-      success: false,
-      error: { code: 'INVALID_ARGS', message: 'IPC request must be a JSON object' },
-    });
-    return;
-  }
-
-  const action = typeof parsed.action === 'string' ? parsed.action : 'execute';
-
-  try {
     if (action === 'status') {
       processState.status.connected = processState.dap.isConnected();
-      await writeJsonLine(socket, { success: true, data: processState.status });
-      return;
+      return { data: processState.status };
     }
 
     if (action === 'stop') {
-      await writeJsonLine(socket, { success: true, data: { stopping: true } });
-      setImmediate(() => {
-        void shutdownDaemon(processState);
-      });
-      return;
+      shouldShutdown = true;
+      return { data: { stopping: true } };
     }
 
     if (action !== 'execute') {
       throw new GodotFlowError('FUNCTION_NOT_FOUND', `Unknown daemon action: ${action}`);
     }
 
-    const fnName = typeof parsed.fnName === 'string' ? parsed.fnName : undefined;
-    const args = isRecord(parsed.args) ? parsed.args : {};
+    const fnName = typeof request.fnName === 'string' ? request.fnName : undefined;
+    const args = isRecord(request.args) ? request.args : {};
 
     if (!fnName) {
       throw new GodotFlowError('INVALID_ARGS', 'Missing fnName for execute action');
@@ -746,23 +722,17 @@ async function handleClientMessage(processState: DAPDaemonProcess, socket: Socke
     const data = await processState.dap.execute(fnName, args);
     processState.status.connected = processState.dap.isConnected();
 
-    await writeJsonLine(socket, {
-      success: true,
+    return {
       data,
       durationMs: Date.now() - startedAt,
-    });
-  } catch (error) {
-    const normalized = error instanceof GodotFlowError
-      ? error
-      : new GodotFlowError('EXECUTION_FAILED', toErrorMessage(error));
+    };
+  });
 
-    await writeJsonLine(socket, {
-      success: false,
-      error: {
-        code: normalized.code,
-        message: normalized.message,
-        details: normalized.details,
-      },
+  await writeJsonLine(socket, response as JsonRecord);
+
+  if (shouldShutdown) {
+    setImmediate(() => {
+      void shutdownDaemon(processState);
     });
   }
 }
