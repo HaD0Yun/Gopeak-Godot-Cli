@@ -260,9 +260,8 @@ function checkCommandAvailability(command: string): { ok: boolean; output: strin
 
 async function createDoctorReport(command: Command): Promise<DoctorReport> {
   const context = parseContext(command);
-  const argProjectPath = typeof args.projectPath === 'string' ? args.projectPath : undefined;
   const config = loadConfig({
-    projectPath: context.projectPath ?? argProjectPath,
+    projectPath: context.projectPath,
     timeoutMs: context.timeoutMs,
   });
 
@@ -359,8 +358,9 @@ async function routeExecution(
   command: Command,
 ): Promise<ExecutionResult> {
   const context = parseContext(command);
+  const argProjectPath = typeof args.projectPath === 'string' ? args.projectPath : undefined;
   const config = loadConfig({
-    projectPath: context.projectPath,
+    projectPath: context.projectPath ?? argProjectPath,
     timeoutMs: context.timeoutMs,
   });
 
