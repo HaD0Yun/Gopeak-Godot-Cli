@@ -114,7 +114,7 @@ export function createServer(): McpServer {
 
   server.tool(
     'Godot.listfunc',
-    'List available Godot Flow functions by optional category.',
+    'List available gopeak-cli / godot-flow functions by optional category.',
     {
       category: z.string().optional(),
     },
@@ -129,7 +129,7 @@ export function createServer(): McpServer {
 
   server.tool(
     'Godot.findfunc',
-    'Search Godot Flow functions by text pattern and optional category.',
+    'Search gopeak-cli / godot-flow functions by text pattern and optional category.',
     {
       pattern: z.string(),
       category: z.string().optional(),
@@ -167,7 +167,7 @@ export function createServer(): McpServer {
 
   server.tool(
     'Godot.execute',
-    'Execute a Godot Flow function with validated arguments and engine routing.',
+    'Execute a gopeak-cli / godot-flow function with validated arguments and engine routing.',
     {
       name: z.string(),
       args: z.record(z.unknown()).optional(),

@@ -8,8 +8,8 @@ import { fileURLToPath } from 'node:url';
 
 const execAsync = promisify(exec);
 
-const APP_NAME = 'godot-flow';
-const PACKAGE_NAME = 'godot-flow';
+const APP_NAME = 'gopeak-cli';
+const PACKAGE_NAME = 'gopeak-cli';
 const GITHUB_REPO = 'HaD0Yun/Gopeak-godot-Cli';
 const GITHUB_BRANCHES = ['dev', 'main'] as const;
 const REPO_URL = `https://github.com/${GITHUB_REPO}`;
