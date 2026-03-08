@@ -1,6 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import {
-  APP_NAME,
   DETECTABLE_COMMANDS,
   ONBOARDING_SHOWN_FILE,
   REPO_URL,
@@ -38,9 +37,9 @@ export async function setupShellHooks(args: string[] = []): Promise<void> {
   writeFileSync(rcFile, nextContent);
 
   if (content.includes(MARKER_START)) {
-    log(`🔄 Updated ${APP_NAME} shell hooks in ${rcFile}`);
+    log(`🔄 Updated gopeak-cli shell hooks in ${rcFile}`);
   } else {
-    log(`✅ Installed ${APP_NAME} shell hooks in ${rcFile}`);
+    log(`✅ Installed gopeak-cli shell hooks in ${rcFile}`);
   }
 
   log(`   Detected AI CLIs: ${detectedCommands.length > 0 ? detectedCommands.join(', ') : 'none'}`);
@@ -54,7 +53,7 @@ export async function setupShellHooks(args: string[] = []): Promise<void> {
   }
 
   if (!existsSync(STAR_PROMPTED_FILE)) {
-    log(`⭐ If ${APP_NAME} helps your workflow, you can star the repo later with: ${APP_NAME} star`);
+    log('⭐ If gopeak-cli helps your workflow, you can star the repo later with: gopeak-cli star');
     log('');
   }
 }
@@ -63,44 +62,44 @@ function generateHookBlock(shellName: 'bash' | 'zsh', detectedCommands: string[]
   const standardCommands = detectedCommands.filter((command) => command !== 'omx');
   const lines: string[] = [
     MARKER_START,
-    `# ${APP_NAME} update notifications for AI CLI tools`,
-    `# Installed by: ${APP_NAME} setup | Remove with: ${APP_NAME} uninstall`,
+    '# gopeak-cli update notifications for AI CLI tools',
+    '# Installed by: gopeak-cli setup | Remove with: gopeak-cli uninstall',
     `# Detected at setup: ${detectedCommands.length > 0 ? detectedCommands.join(', ') : 'none from [' + DETECTABLE_COMMANDS.join(', ') + ']'}`,
     '',
-    '__gopeak_cli_precheck() {',
+    '__godot_flow_precheck() {',
     '  local notify="$HOME/.gopeak-cli/notify"',
     '  local star="$HOME/.gopeak-cli/star-prompted"',
     '  if [ -f "$notify" ] || [ ! -f "$star" ]; then',
-    `    command -v ${APP_NAME} >/dev/null 2>&1 && ${APP_NAME} notify`,
+    '    command -v gopeak-cli >/dev/null 2>&1 && gopeak-cli notify',
     '  fi',
     '  local ts="$HOME/.gopeak-cli/last-check"',
     '  if [ -f "$ts" ]; then',
     '    local age=$(( $(date +%s) - $(cat "$ts") ))',
     '    [ "$age" -lt 86400 ] && return',
     '  fi',
-    `  command -v ${APP_NAME} >/dev/null 2>&1 && ${APP_NAME} check --bg >/dev/null 2>&1 &`,
+    '  command -v gopeak-cli >/dev/null 2>&1 && gopeak-cli check --bg >/dev/null 2>&1 &',
     '}',
     '',
   ];
 
   for (const command of standardCommands) {
-    lines.push(`${command}() { __gopeak_cli_precheck; command ${command} "$@"; }`);
+    lines.push(`${command}() { __godot_flow_precheck; command ${command} "$@"; }`);
   }
 
   if (detectedCommands.includes('omx')) {
     if (shellName === 'zsh') {
       lines.push('if typeset -f omx >/dev/null 2>&1; then');
-      lines.push('  eval "$(functions omx | sed \"1s/^omx /__gopeak_cli_orig_omx /\")"');
-      lines.push('  omx() { __gopeak_cli_precheck; __gopeak_cli_orig_omx "$@"; }');
+      lines.push('  eval "$(functions omx | sed \"1s/^omx /__godot_flow_orig_omx /\")"');
+      lines.push('  omx() { __godot_flow_precheck; __godot_flow_orig_omx "$@"; }');
       lines.push('else');
-      lines.push('  omx() { __gopeak_cli_precheck; command omx "$@"; }');
+      lines.push('  omx() { __godot_flow_precheck; command omx "$@"; }');
       lines.push('fi');
     } else {
       lines.push('if declare -f omx >/dev/null 2>&1; then');
-      lines.push(String.raw`  eval "$(declare -f omx | sed '1s/^omx /__gopeak_cli_orig_omx /')"`);
-      lines.push('  omx() { __gopeak_cli_precheck; __gopeak_cli_orig_omx "$@"; }');
+      lines.push('  eval "__godot_flow_orig_omx() $(declare -f omx | sed \"1d\")"');
+      lines.push('  omx() { __godot_flow_precheck; __godot_flow_orig_omx "$@"; }');
       lines.push('else');
-      lines.push('  omx() { __gopeak_cli_precheck; command omx "$@"; }');
+      lines.push('  omx() { __godot_flow_precheck; command omx "$@"; }');
       lines.push('fi');
     }
     lines.push('');
@@ -122,13 +121,13 @@ function escapeRegex(value: string): string {
 function printOnboarding(log: (...args: unknown[]) => void): void {
   const version = getLocalVersion();
   log('╔══════════════════════════════════════════════════════╗');
-  log(`║  🎮 ${APP_NAME} v${version}${' '.repeat(Math.max(0, 34 - version.length))}║`);
+  log(`║  🎮 gopeak-cli v${version}${' '.repeat(Math.max(0, 34 - version.length))}║`);
   log('║                                                      ║');
   log('║  CLI-first Godot automation for humans and agents    ║');
   log('║                                                      ║');
   log(`║  📖 Docs:   ${REPO_URL.padEnd(39)}║`);
-  log(`║  ⭐ Star:   ${`${APP_NAME} star`.padEnd(39)}║`);
-  log(`║  🔄 Update: ${`${APP_NAME} check`.padEnd(39)}║`);
+  log(`║  ⭐ Star:   ${'gopeak-cli star'.padEnd(39)}║`);
+  log(`║  🔄 Update: ${'gopeak-cli check'.padEnd(39)}║`);
   log('╚══════════════════════════════════════════════════════╝');
   log('');
 }
