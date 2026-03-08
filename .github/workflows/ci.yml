@@ -6,6 +6,7 @@ on:
       - main
       - master
       - dev
+      - 'feat/cli-auto-detect-update-hooks'
   pull_request:
 
 jobs:
