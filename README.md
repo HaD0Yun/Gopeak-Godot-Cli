@@ -8,8 +8,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](LICENSE)
 [![Made with Godot](https://img.shields.io/badge/Made%20with-Godot-478CBF?logo=godotengine&logoColor=white)](https://godotengine.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?logo=discord&logoColor=white)](https://discord.gg/FPKn4Xp8)
 
 **GoPeak CLI is a compact Godot automation CLI and MCP server for humans and AI agents.**
+
+> Join the GoPeak Discord community: https://discord.gg/FPKn4Xp8
 
 It exposes **220 Godot functions** through **4 MCP meta-tools** instead of hundreds of individual tool registrations.
 That means:
